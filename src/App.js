@@ -7,7 +7,7 @@ import PetDetails from "./components/PetDetails/PetDetails";
 
 function App() {
   return (
-    <div className="App p-7">
+    <div className="App p-7 select-none">
       <Router>
         <Navbar></Navbar>
         <Routes>
