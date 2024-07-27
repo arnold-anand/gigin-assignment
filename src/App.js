@@ -4,6 +4,7 @@ import Navbar from "./components/Navbar/Navbar";
 import PetList from "./components/PetList/PetList";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PetDetails from "./components/PetDetails/PetDetails";
+import BreedsbyAnimals from "./components/Breeds/BreedsbyAnimals";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Routes>
           <Route path="/" element={<PetList />} />
           <Route path="/pet/:id" element={<PetDetails />} />
+          <Route path="breeds" element={<BreedsbyAnimals />} />
         </Routes>
       </Router>
     </div>
