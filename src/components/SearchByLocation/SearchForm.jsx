@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from "react";
-import PetListUI from "../PetList/PetList.component";
+import React, { useEffect, useState } from 'react';
+import PetListUI from '../PetList/PetList.component';
 
-const BreedsbyAnimals = () => {
+const SearchForm = () => {
   const [pets, setPets] = useState([]);
   const [animals, setAnimals] = useState([]);
   const [selectedAnimal, setSelectedAnimal] = useState("");
   const [breeds, setBreeds] = useState([]);
   const [selectedBreed, setSelectedBreed] = useState("");
+  const [locations, setLocations] = useState([]);
+  const [selectedLocation, setSelectedLocation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const [noResults, setNoResults] = useState(false); 
+  const [noResults, setNoResults] = useState(false);
 
   useEffect(() => {
     const fetchAnimals = async () => {
@@ -39,6 +41,30 @@ const BreedsbyAnimals = () => {
     fetchBreeds();
   }, [selectedAnimal]);
 
+  useEffect(() => {
+    console.log("start")
+    const fetchLocations = async () => {
+      let allLocations = [];
+      for (let id = 1; id <= 63; id++) {
+        try {
+          const response = await fetch(`http://pets-v2.dev-apis.com/pets?id=${id}`);
+          const data = await response.json();
+          
+          const location = `${data.pets[0].city}, ${data.pets[0].state}`;
+          if (!allLocations.includes(location)) {
+            allLocations.push(location);
+          }
+        } catch (error) {
+          console.error(`Error fetching location data for id ${id}:`, error);
+        }
+      }
+      console.log("end");
+      setLocations(allLocations);
+    };
+
+    fetchLocations();
+  }, []);
+
   const handleAnimalChange = (e) => {
     setSelectedAnimal(e.target.value);
     setSelectedBreed("");
@@ -48,12 +74,19 @@ const BreedsbyAnimals = () => {
     setSelectedBreed(e.target.value);
   };
 
+  const handleLocationChange = (e) => {
+    setSelectedLocation(e.target.value);
+  };
+
   const handleSearch = async () => {
-    if (!selectedAnimal || !selectedBreed) return;
+    if (!selectedAnimal || !selectedBreed || !selectedLocation) return;
     setIsLoading(true);
     setNoResults(false);
+    const [city, state] = selectedLocation.split(", ");
     try {
-      const response = await fetch(`https://pets-v2.dev-apis.com/pets?animal=${selectedAnimal}&breed=${selectedBreed}`);
+      const response = await fetch(
+        `http://pets-v2.dev-apis.com/pets?animal=${selectedAnimal}&city=${city}&breed=${selectedBreed}&state=${state}`
+      );
       const petsData = await response.json();
       setPets(petsData.pets);
       if (petsData.pets.length === 0) {
@@ -89,8 +122,17 @@ const BreedsbyAnimals = () => {
           </select>
         )}
 
+        <select className="border rounded h-8 w-32 outline-none" name="location" id="location" onChange={handleLocationChange} value={selectedLocation}>
+          <option value="">Select a location</option>
+          {locations.map((location, index) => (
+            <option key={index} value={location}>
+              {location}
+            </option>
+          ))}
+        </select>
+
         <div>
-        <button className="bg-indigo-500 text-white rounded py-1 w-32" type="button" onClick={handleSearch}>Search</button>
+          <button className="bg-indigo-500 text-white rounded py-1 w-32" type="button" onClick={handleSearch}>Search</button>
         </div>
       </form>
 
@@ -100,7 +142,7 @@ const BreedsbyAnimals = () => {
         </div>
       ) : noResults ? (
         <div className="flex items-center justify-center text-6xl h-60">
-          <p>No results found for the selected animal and breed.</p>
+          <p>No results found for the selected animal, breed, and location.</p>
         </div>
       ) : (
         <PetListUI
@@ -117,4 +159,4 @@ const BreedsbyAnimals = () => {
   );
 };
 
-export default BreedsbyAnimals;
+export default SearchForm;

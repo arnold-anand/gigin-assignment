@@ -5,6 +5,7 @@ import PetList from "./components/PetList/PetList";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import PetDetails from "./components/PetDetails/PetDetails";
 import BreedsbyAnimals from "./components/Breeds/BreedsbyAnimals";
+import SearchForm from "./components/SearchByLocation/SearchForm";
 
 function App() {
   return (
@@ -14,7 +15,8 @@ function App() {
         <Routes>
           <Route path="/" element={<PetList />} />
           <Route path="/pet/:id" element={<PetDetails />} />
-          <Route path="breeds" element={<BreedsbyAnimals />} />
+          <Route path="breeds-search" element={<BreedsbyAnimals />} />
+          <Route path="location-search" element={<SearchForm />} />
         </Routes>
       </Router>
     </div>

@@ -98,7 +98,7 @@ const PetListUI = ({ pets, isLoading, currentPage, totalPages, onPreviousPage, o
             <button
               className="mr-4 text-gray-500 disabled:text-gray-300"
               onClick={onPreviousPage}
-              disabled={currentPage === 0} // Adjusted for zero-based index
+              disabled={currentPage === 0}
             >
               Previous
             </button>
